@@ -1,105 +1,279 @@
-# Instagram Not Following Back Checker
+# 📊 Insta Audit
 
-A small Python script that reads your Instagram data export and tells you **who you follow but who doesn't follow you back**. It works fully offline on your own exported files, so you never have to enter your Instagram password or use any third-party app.
+A beginner-friendly Python project that analyzes your Instagram followers and following data to find **who you follow but who doesn't follow you back**.
 
-## Features
+Insta Audit works completely **offline** using your Instagram data export. You don't need to enter your Instagram password or use any third-party Instagram service.
 
-- Reads your Instagram `followers` and `following` JSON files
-- Counts total followers and total following
-- Finds accounts that don't follow you back
-- Saves the result as a sorted (A-Z) list in `not_following_back.txt`
+---
 
-## How It Works
+## ✨ Features
 
-1. Loads both JSON files using Python's built-in `json` module.
-2. Stores usernames in two `set`s (fast comparison, no duplicates).
-3. Uses set difference: `following - followers` gives everyone you follow who doesn't follow you.
-4. Sorts the result alphabetically and writes it to a text file.
+- 📥 Reads Instagram `followers` and `following` JSON files
+- 👥 Counts total followers
+- ➡️ Counts total following
+- 🔍 Finds people who don't follow you back
+- 🔤 Sorts usernames alphabetically
+- 📄 Saves the results to `not_following_back.txt`
+- 🔒 Works completely offline
+- 🚫 No Instagram password required
+- 📦 No external Python libraries required
 
-## Requirements
+---
 
-- Python 3.6 or higher
-- No external libraries needed (only the built-in `json` module)
+## 📸 Screenshots
 
-## Getting Your Instagram Data
+**Terminal output**
 
-1. Open Instagram → **Settings** → **Accounts Center**.
-2. Go to **Your information and permissions** → **Download your information**.
-3. Choose **Followers and following** as the data to export.
-4. Select the format **JSON** and submit the request.
-5. Once Instagram emails you the download link, extract the ZIP file.
-6. Copy these two files next to the script:
-   - `followers_1.json`
-   - `following.json`
+![Terminal output](screenshots/terminal_output.png)
 
-> Note: Instagram's menu names and export layout can change over time, so the steps above may look slightly different for you.
+**Generated result file**
 
-## Project Structure
+![Result file](screenshots/result_file.png)
 
+---
+
+## 📥 Getting Your Instagram Data
+
+Before running Insta Audit, download your Instagram **Followers and following** data in **JSON** format.
+
+1. **Open Instagram** and log in to the account you want to analyze.
+2. Go to **Settings → Accounts Center**.
+3. Open **Your information and permissions → Download your information**.
+4. Select the Instagram account you want to analyze.
+5. Choose the option to select **specific information**, then pick **Followers and following**.
+6. Choose **JSON** as the format (required, because the script reads the data with Python's built-in `json` module).
+7. Submit the request. When Instagram finishes preparing it, download the ZIP file and extract it.
+
+> **Note:** Instagram's menu names change over time, so the exact steps may look slightly different in your version of the app.
+
+---
+
+## 📂 Preparing the Data
+
+From the extracted ZIP, copy these two files into the same folder as `main.py`:
+
+```text
+followers_1.json
+following.json
 ```
-.
-├── script.py               # main script (use your own file name)
-├── followers_1.json        # from your Instagram export
-├── following.json          # from your Instagram export
-└── not_following_back.txt  # generated output
+
+Your project should look like this:
+
+```text
+Insta Audit/
+│
+├── main.py
+├── followers_1.json
+├── following.json
+├── not_following_back.txt   (created after running the script)
+├── README.md
+├── .gitignore
+│
+└── screenshots/
+    ├── terminal_output.png
+    └── result_file.png
 ```
 
-## Usage
+> ⚠️ **Important:** Do not upload your Instagram JSON files to GitHub. They contain personal account information.
+
+---
+
+## ⚙️ How It Works
+
+```text
+Instagram Data Export
+        ↓
+followers_1.json + following.json
+        ↓
+Read JSON files
+        ↓
+Extract usernames into sets
+        ↓
+following - followers
+        ↓
+Sort usernames
+        ↓
+Create not_following_back.txt
+```
+
+### 1. Read the JSON files
+
+The program loads both files using Python's built-in `json` module:
+
+```python
+import json
+```
+
+### 2. Extract usernames
+
+Usernames are stored in Python **sets**, which makes comparison easy and removes duplicates:
+
+```python
+followers = {"user1", "user2", "user3"}
+following = {"user1", "user2", "user3", "user4", "user5"}
+```
+
+### 3. Compare followers and following
+
+The core logic is a single set difference:
+
+```python
+not_following_back = following - followers
+```
+
+With the example above, the result is `user4` and `user5`: you follow them, but they don't follow you back.
+
+### 4. Sort the results
+
+```python
+sorted(not_following_back)
+```
+
+Sorting alphabetically makes the output easier to read.
+
+### 5. Create the output file
+
+Finally, the script writes `not_following_back.txt` with your follower count, following count, and the list of accounts that don't follow you back.
+
+---
+
+## ▶️ How to Run
+
+Open the project folder in VS Code or a terminal and run:
 
 ```bash
-python script.py
+python main.py
 ```
 
-Sample terminal output:
+Example terminal output:
 
-```
-Total followers: 320
-Total following: 410
-Not following you back: 95
+```text
+Total followers: 139
+Total following: 176
+Not following you back: 39
 Done! not_following_back.txt file ban gayi.
 ```
 
-## Output File
+---
 
-`not_following_back.txt` looks like this:
+## 📄 Output File
 
-```
-Total followers: 320
-Total following: 410
+The generated `not_following_back.txt` looks like this:
+
+```text
+Total followers: 139
+Total following: 176
 
 People who don't follow you back:
 
 username_one
 username_two
 username_three
+...
 ```
 
-## Troubleshooting
+Usernames are sorted alphabetically.
 
-| Problem | Fix |
-|---|---|
-| `FileNotFoundError` | Make sure both JSON files are in the same folder as the script, or update the file paths at the top of the script. |
-| `KeyError: 'relationships_following'` | Your export may use a different structure. Open `following.json` and check the top-level key name. |
-| Followers are split into multiple files (`followers_2.json`, etc.) | Large accounts get several files. Load each one and add the usernames to the same `followers` set. |
-| Emojis or special characters look broken | The script already uses `encoding="utf-8"`. Open the output file in an editor that supports UTF-8. |
+---
 
-## Privacy
+## 🛠️ Requirements
 
-Everything runs locally on your computer. Your data is never uploaded anywhere. Don't commit your JSON export files to a public GitHub repo, since they contain personal account information. Add them to `.gitignore`:
+- Python 3.6 or higher
+- An Instagram data export in JSON format
+- VS Code or any other code editor / terminal
 
-```
-followers_1.json
+**No external libraries are needed.** The project only uses Python's built-in `json` module.
+
+---
+
+## 🔒 Privacy
+
+Insta Audit is designed to run locally on your computer.
+
+- ❌ Your data is not uploaded anywhere
+- ❌ Your data is not sent to any server
+- ❌ Nothing is shared with third-party services
+- ❌ No Instagram password is required
+- ✅ Everything is processed locally
+
+### Keep your data out of GitHub
+
+Instagram JSON files and the generated results contain personal information. Add this to your `.gitignore`:
+
+```text
+followers_*.json
 following.json
 not_following_back.txt
 ```
 
-## Possible Improvements
+Or, to ignore all JSON files:
 
-- Support multiple follower files automatically (`followers_*.json`)
-- Also list "fans" (people who follow you but you don't follow back)
-- Export results to CSV
-- Simple GUI or command-line arguments for file paths
+```text
+*.json
+not_following_back.txt
+```
 
-## Author
+> 💡 If you add screenshots to the repo, blur or crop the usernames first, since they belong to real people.
 
-Made by Dilnoor as a beginner-friendly Python project to practice file handling, JSON parsing and sets.
+---
+
+## 🧩 Troubleshooting
+
+| Problem | Possible solution |
+|---|---|
+| `FileNotFoundError` | Make sure `followers_1.json` and `following.json` are in the same folder as `main.py`. |
+| `KeyError: 'relationships_following'` | Your export may have a different JSON structure. Open `following.json` and check its structure. |
+| Only some followers are counted | Instagram can split followers into `followers_1.json`, `followers_2.json`, etc. Include all of them. |
+| Output looks incorrect | Make sure the data was downloaded in **JSON** format, not HTML. |
+| Special characters look wrong | Open and write files using UTF-8 encoding. |
+
+---
+
+## 🚀 Future Improvements
+
+- [ ] Automatically detect multiple `followers_*.json` files
+- [ ] Find people who follow you but you don't follow back
+- [ ] Export results to CSV
+- [ ] Add a simple GUI
+- [ ] Add command-line arguments
+- [ ] Add account statistics
+- [ ] Improve compatibility with different Instagram export structures
+
+---
+
+## 🎯 What I Learned
+
+I built Insta Audit to apply basic programming concepts to a real-world problem. Along the way I practiced:
+
+- File handling and writing files
+- JSON parsing
+- Sets and set difference
+- Loops and functions
+- Sorting
+- Working with real-world exported data
+
+The core idea is one line:
+
+```python
+following - followers
+```
+
+---
+
+## 💡 Why I Built This
+
+Instead of only practicing Python syntax with small exercises, I wanted to build something that solves a real problem, and keep it simple, offline, and privacy-friendly.
+
+---
+
+## 👨‍💻 Author
+
+**Dilnoor**
+
+Built as a Python learning project while practicing file handling, JSON parsing, sets, and working with real-world data.
+
+---
+
+## ⭐ Support
+
+If you found this project useful, consider giving the repository a ⭐ on GitHub!
