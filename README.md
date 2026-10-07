@@ -20,18 +20,6 @@ Insta Audit works completely **offline** using your Instagram data export. You d
 
 ---
 
-## 📸 Screenshots
-
-**Terminal output**
-
-![Terminal output](screenshots/terminal_output.png)
-
-**Generated result file**
-
-![Result file](screenshots/result_file.png)
-
----
-
 ## 📥 Getting Your Instagram Data
 
 Before running Insta Audit, download your Instagram **Followers and following** data in **JSON** format.
